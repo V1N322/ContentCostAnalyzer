@@ -7,3 +7,6 @@ __pycache__/
 
 # Исключить виртуальное окружение
 venv/
+
+run.bash
+googleAPI.json
