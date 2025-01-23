@@ -44,6 +44,7 @@ class ClaudeHandler:
             total_cost = input_cost + output_cost
 
             return {
+                "model": self.model_name,
                 "input": prompt,
                 "output": output,
                 "inputTokens": input_tokens,
@@ -54,7 +55,7 @@ class ClaudeHandler:
                 "totalCost": total_cost
             }
         except Exception as e:
-            return {"error": str(e)}
+            return {"model": self.model_name, "error": str(e)} 
 
     def _calculate_cost(self, tokens: int, cost_per_1000_tokens: float) -> float:
         return (tokens / 1000) * cost_per_1000_tokens
