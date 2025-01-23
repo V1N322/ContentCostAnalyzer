@@ -1,0 +1,3 @@
+OPENAI_TOKEN=sk-proj-
+ANTHROPIC_TOKEN=sk-ant
+GOOGLE_TOKEN_PATH=/your/path/to/google/json/token.json
