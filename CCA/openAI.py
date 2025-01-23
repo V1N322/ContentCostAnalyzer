@@ -22,14 +22,20 @@ class GPTHandler:
         try:
             client = OpenAI(api_key=self.api_key)
             
-            response = client.chat.completions.create(
-                model=self.model_name,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+            request_params = {
+                "model": self.model_name,
+                "messages": [
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=max_tokens
-            )
+            }
+            
+            # Адаптация под разные модели
+            if self.model_name == "o1-mini" or self.model_name == "o1-preview":
+                request_params["max_completion_tokens"] = max_tokens
+            else:
+                request_params["max_tokens"] = max_tokens
+            
+            response = client.chat.completions.create(**request_params)
 
             output = response.choices[0].message.content.strip()
             input_tokens = response.usage.prompt_tokens
@@ -41,6 +47,7 @@ class GPTHandler:
             total_cost = input_cost + output_cost
 
             return {
+                "model": self.model_name,
                 "input": prompt,
                 "output": output,
                 "inputTokens": input_tokens,
@@ -51,7 +58,7 @@ class GPTHandler:
                 "totalCost": total_cost
             }
         except Exception as e:
-            return {"error": str(e)}
+            return {"model": self.model_name, "error": str(e)} 
 
     def _calculate_cost(self, tokens: int, cost_per_1000_tokens: float) -> float:
         return (tokens / 1000) * cost_per_1000_tokens
@@ -60,12 +67,11 @@ class GPTHandler:
     def to_json(data: Dict[str, Any], indent: int = 4) -> str:
         return json.dumps(data, ensure_ascii=False, indent=indent)
 
-
 def main():
     load_dotenv()
 
     try:
-        handler = GPTHandler(model_name="gpt-4o-2024-11-20")
+        handler = GPTHandler(model_name="o1")
         
         prompt = input("Enter a prompt: ")
         
@@ -74,7 +80,6 @@ def main():
 
     except Exception as e:
         print(f"Critical error: {e}")
-
 
 if __name__ == "__main__":
     main()
