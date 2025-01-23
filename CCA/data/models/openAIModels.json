@@ -1,0 +1,38 @@
+{
+    "provider": "OpenAI",
+    "models": [
+      {
+        "name": "o1-preview",
+        "pricing": {
+          "input": {
+            "1000t": 0.015
+          },
+          "output": {
+            "1000t": 0.06
+          }
+        }
+      },
+      {
+        "name": "gpt-4o",
+        "pricing": {
+          "input": {
+            "1000t": 0.0025
+          },
+          "output": {
+            "1000t": 0.01
+          }
+        }
+      },
+      {
+        "name": "o1-mini",
+        "pricing": {
+          "input": {
+            "1000t": 0.003
+          },
+          "output": {
+            "1000t": 0.012
+          }
+        }
+      }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "provider": "Anthropic",
+    "models": [
+      {
+        "name": "claude-3-5-sonnet-latest",
+        "pricing": {
+          "input": {
+            "1000t": 0.003
+          },
+          "output": {
+            "1000t": 0.015
+          }
+        }
+      }
+    ]
+}

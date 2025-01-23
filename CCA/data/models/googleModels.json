@@ -1,0 +1,16 @@
+{
+    "provider": "Google",
+    "models": [
+      {
+        "name": "gemini-1.5-pro",
+        "pricing": {
+          "input": {
+            "1000t": 0.00125
+          },
+          "output": {
+            "1000t": 0.005
+          }
+        }
+      }
+    ]
+  }

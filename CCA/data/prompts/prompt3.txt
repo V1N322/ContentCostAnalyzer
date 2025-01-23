@@ -1,0 +1,15 @@
+Create a neutral text based on the summary of posts below. Focus on facts and a clear structure of the text. Avoid subjective judgments or emotional coloring. Highlight key data using simple and clear formulations. Text length: from 500 to 1000 characters.
+Example text structure: Description of the current situation. Brief presentation of statistics or key data. Clarification of the current status or consequences. Conclusion with a neutral assessment.
+Here is example post to inherit style:
+“While it’s a big day in Lebanon, an update on the LA fires is necessary.
+
+They have gone from bad to worse. It’s a crazy sight.
+
+Apart from leading to massive devastation in the Pacific Palisades area of the city, new fires have now broken out in the Hollywood Hills and Studio City.
+
+The inferno has led to at least 5 deaths, 2000 structures destroyed, and $50 billion in damage.
+
+These are happening in landmark areas in the city.
+
+Many of these fires are still 0% contained.”
+Posts to summarize content during analysis:

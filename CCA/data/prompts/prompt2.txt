@@ -1,0 +1,23 @@
+Write an emotional text based on the summary of posts below. Focus on a vivid visual or personal detail to create a strong image. Use metaphors, artistic descriptions, and repetitions to enhance the emotional effect. Make the text personal and caring by adding calls to the readers. Concisely convey the main ideas. Text length: from 300 to 600 characters, up to 1200 if depth is required.
+Example text structure: Introduction through an emotional image. Description of a situation or event with a focus on emotions. Conclusion with a call to action or reflection.
+Here is example post to inherit style:
+“For those still playing with fire staying in Beirut, please don’t.
+
+Prepare for the worst.
+
+If you can, please make arrangements to leave Beirut, at least temporarily, out of an abundance of caution. 
+
+Things are not looking good anymore.
+
+I don’t want to turn people’s emotions into a see saw.
+
+All I am saying, is hope for the best and prepare for the worst.
+
+Preparing for the worst means making these arrangements if you can.
+
+I will continue to update, while being as careful as I can not dragging people’s emotions.
+
+I will wait for concrete confirmation of claims and reports as best as possible before reporting here.
+
+Please stay safe everyone.”
+Posts to summarize content during analysis:
