@@ -16,15 +16,15 @@ from tqdm import tqdm
 logging.basicConfig(filename='test_log.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
-def test_openai_model(model_name, prompt, input_token_cost, output_token_cost):
+def test_openai_model(model_name, prompt, input_token_cost, output_token_cost, metadata):
     """Tests an OpenAI model and returns the result as a JSON string."""
-    print(f"DEBUG: test_openai_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}")
+    print(f"DEBUG: test_openai_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}, metadata: {metadata}")
     api_key = os.getenv("OPENAI_TOKEN")
     client = openAI.GPTHandler(model_name, api_key)
     try:
         result = client.generate_response(prompt, 8192, input_token_cost, output_token_cost)
         logging.info(f"Successfully tested OpenAI model: {model_name}")
-        json_result = client.to_json(result) # Исправлено: вызываем метод to_json у объекта client
+        json_result = client.to_json(result, metadata=metadata)
         print(f"DEBUG: OpenAI Result JSON: {json_result}")
         return json_result
     except Exception as e:
@@ -32,15 +32,15 @@ def test_openai_model(model_name, prompt, input_token_cost, output_token_cost):
         print(f"DEBUG: Error testing OpenAI model: {model_name}. Error: {e}")
         return None
 
-def test_anthropic_model(model_name, prompt, input_token_cost, output_token_cost):
+def test_anthropic_model(model_name, prompt, input_token_cost, output_token_cost, metadata):
     """Tests an Anthropic model and returns the result as a JSON string."""
-    print(f"DEBUG: test_anthropic_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}")
+    print(f"DEBUG: test_anthropic_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}, metadata: {metadata}")
     api_key = os.getenv("ANTHROPIC_TOKEN")
     client = AnthropicAI.ClaudeHandler(model_name, api_key)
     try:
         result = client.generate_response(prompt, 8192, input_token_cost, output_token_cost)
         logging.info(f"Successfully tested Anthropic model: {model_name}")
-        json_result = client.to_json(result) # Исправлено: вызываем метод to_json у объекта client
+        json_result = client.to_json(result, metadata=metadata)
         print(f"DEBUG: Anthropic Result JSON: {json_result}")
         return json_result
     except Exception as e:
@@ -48,15 +48,15 @@ def test_anthropic_model(model_name, prompt, input_token_cost, output_token_cost
         print(f"DEBUG: Error testing Anthropic model: {model_name}. Error: {e}")
         return None
 
-def test_google_model(model_name, prompt, input_token_cost, output_token_cost):
+def test_google_model(model_name, prompt, input_token_cost, output_token_cost, metadata):
     """Tests a Google model and returns the result as a JSON string."""
-    print(f"DEBUG: test_google_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}")
+    print(f"DEBUG: test_google_model called with model: {model_name}, prompt: {prompt[:20]}..., input_cost: {input_token_cost}, output_cost: {output_token_cost}, metadata: {metadata}")
     api_key = os.getenv("GOOGLE_TOKEN_PATH")
     client = googleAPI.GoogleAIHandler(model_name, api_key)
     try:
         result = client.generate_response(prompt, input_token_cost, output_token_cost)
         logging.info(f"Successfully tested Google model: {model_name}")
-        json_result = client.to_json(result) # Исправлено: вызываем метод to_json у объекта client
+        json_result = client.to_json(result, metadata=metadata)
         print(f"DEBUG: Google Result JSON: {json_result}")
         return json_result
     except Exception as e:
@@ -64,19 +64,19 @@ def test_google_model(model_name, prompt, input_token_cost, output_token_cost):
         print(f"DEBUG: Error testing Google model: {model_name}. Error: {e}")
         return None
 
-def test_models(prompt, models_info):
+def test_models(prompt, models_info, metadata):
     """Tests a list of models from a provider and returns a list of results."""
     results = []
-    print(f"DEBUG: test_models called with prompt: {prompt[:20]}..., models_info: {models_info}")
+    print(f"DEBUG: test_models called with prompt: {prompt[:20]}..., models_info: {models_info}, metadata: {metadata}")
     for model in models_info['models']:
         logging.info(f"Testing model: {model['name']} from provider: {models_info['provider']}")
         print(f"DEBUG: Provider: {models_info['provider']}, Model: {model['name']}")
         if models_info['provider'] == "Google":
-            result_json = test_google_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'])
+            result_json = test_google_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'], metadata)
         elif models_info['provider'] == "Anthropic":
-            result_json = test_anthropic_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'])
+            result_json = test_anthropic_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'], metadata)
         elif models_info['provider'] == "OpenAI":
-            result_json = test_openai_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'])
+            result_json = test_openai_model(model['name'], prompt, model['pricing']['input']['1000t'], model['pricing']['output']['1000t'], metadata)
         else:
             logging.warning(f"Unknown provider: {models_info['provider']}")
             print(f"DEBUG: Unknown provider: {models_info['provider']}")
@@ -99,18 +99,26 @@ def process_prompt_file(prompt_path, thematics_dir, models_dir, all_results, pro
     logging.info(f"Processing prompt file: {prompt_path}")
     print(f"DEBUG: process_prompt_file called with prompt_path: {prompt_path}, thematics_dir: {thematics_dir}, models_dir: {models_dir}")
     with open(prompt_path, 'r') as p:
-        base_prompt = p.read().strip()  # Читаем базовый промпт
+        base_prompt = p.read().strip()
         print(f"DEBUG: Base prompt read: {base_prompt[:50]}...")
+        prompt_file_name = os.path.basename(prompt_path)
+
         for thematic_file in get_files_in_dir(thematics_dir):
             logging.info(f"Processing thematic: {thematic_file}")
             print(f"DEBUG: Processing thematic: {thematic_file}")
             thematic_path = os.path.join(thematics_dir, thematic_file)
             with open(thematic_path, 'r') as t:
-                thematic = t.read().strip() # Читаем тематику
-            
-            # Формируем полный промпт
+                thematic = t.read().strip()
+
             prompt = f"{base_prompt}\n{thematic}"
             print(f"DEBUG: Full Prompt: {prompt[:50]}...")
+            thematic_file_name = os.path.basename(thematic_path)
+
+            # Создаем словарь metadata
+            metadata = {
+                'prompt_file_name': prompt_file_name,
+                'thematic_file_name': thematic_file_name
+            }
 
             for model_file in get_files_in_dir(models_dir):
                 model_path = os.path.join(models_dir, model_file)
@@ -118,9 +126,10 @@ def process_prompt_file(prompt_path, thematics_dir, models_dir, all_results, pro
                 with open(model_path, 'r') as m:
                     model_info = json.load(m)
                     print(f"DEBUG: Model info loaded: {model_info}")
-                    all_results.extend(test_models(prompt, model_info))
+                    all_results.extend(test_models(prompt, model_info, metadata))
                     progress_bar.update(1)
                     print(f"DEBUG: all_results after extend: {all_results}")
+
 
 def get_files_in_dir(directory):
     """Returns a list of files in the specified directory."""
