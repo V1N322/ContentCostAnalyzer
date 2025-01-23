@@ -28,8 +28,8 @@ class GoogleAIHandler:
     def generate_response(
         self,
         prompt: str,
-        cost_per_1000_input_tokens: float = 0.0015, 
-        cost_per_1000_output_tokens: float = 0.0020,
+        cost_per_1000_input_tokens: float = 0.00125,
+        cost_per_1000_output_tokens: float = 0.005,
     ) -> Dict[str, Any]:
         if not self.model:
             return {"error": "Модель не сконфигурирована."}
@@ -42,21 +42,21 @@ class GoogleAIHandler:
             input_tokens = 0
             output_tokens = 0
             total_tokens = 0
+            
+            if response and hasattr(response, 'candidates') and response.candidates:
+                output = response.candidates[0].content.parts[0].text.strip()
 
-            if response and hasattr(response, 'result') and response.result:
-                if response.result.candidates:
-                    output = response.result.candidates[0].content.parts[0].text.strip()
-
-                if hasattr(response.result, 'usage_metadata') and response.result.usage_metadata:
-                    input_tokens = response.result.usage_metadata.prompt_token_count
-                    output_tokens = response.result.usage_metadata.candidates_token_count
-                    total_tokens = response.result.usage_metadata.total_token_count
+            if hasattr(response, 'usage_metadata') and response.usage_metadata:
+                input_tokens = response.usage_metadata.prompt_token_count
+                output_tokens = response.usage_metadata.candidates_token_count
+                total_tokens = response.usage_metadata.total_token_count
 
             input_cost = self._calculate_cost(input_tokens, cost_per_1000_input_tokens)
             output_cost = self._calculate_cost(output_tokens, cost_per_1000_output_tokens)
             total_cost = input_cost + output_cost
 
             return {
+                "model": self.model_name,
                 "input": prompt,
                 "output": output,
                 "inputTokens": input_tokens,
@@ -67,7 +67,7 @@ class GoogleAIHandler:
                 "totalCost": total_cost
             }
         except Exception as e:
-            return {"error": str(e)}
+            return {"model": self.model_name, "error": str(e)}
 
     def _calculate_cost(self, tokens: int, cost_per_1000_tokens: float) -> float:
         return (tokens / 1000) * cost_per_1000_tokens
@@ -84,7 +84,7 @@ def main():
         return
 
     try:
-        handler = GoogleAIHandler(model_name="gemini-2.0-flash-thinking-exp-1219", credentials_file=credentials_path)
+        handler = GoogleAIHandler(model_name="gemini-1.5-pro", credentials_file=credentials_path)
 
         prompt = input("Введите запрос: ")
 
