@@ -61,7 +61,9 @@ class ClaudeHandler:
         return (tokens / 1000) * cost_per_1000_tokens
 
     @staticmethod
-    def to_json(data: Dict[str, Any], indent: int = 4) -> str:
+    def to_json(data: Dict[str, Any], metadata=None, indent: int = 4) -> str:
+        if metadata:
+            data['metadata'] = metadata
         return json.dumps(data, ensure_ascii=False, indent=indent)
 
 
