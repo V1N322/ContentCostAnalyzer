@@ -7,6 +7,9 @@ __pycache__/
 
 # Исключить виртуальное окружение
 venv/
+.venv/
 
 run.bash
-googleAPI.json
+token_google.json
+
+test*
