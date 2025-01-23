@@ -114,7 +114,6 @@ def process_prompt_file(prompt_path, thematics_dir, models_dir, all_results, pro
             print(f"DEBUG: Full Prompt: {prompt[:50]}...")
             thematic_file_name = os.path.basename(thematic_path)
 
-            # Создаем словарь metadata
             metadata = {
                 'prompt_file_name': prompt_file_name,
                 'thematic_file_name': thematic_file_name
@@ -154,7 +153,6 @@ def get_result():
     all_results = []
     print(f"DEBUG: get_result: prompts_dir: {prompts_dir}, thematics_dir: {thematics_dir}, models_dir: {models_dir}")
 
-    # Исправлен расчет итераций:
     total_iterations = sum(len(get_files_in_dir(thematics_dir)) * len(model_info['models']) for _ in get_files_in_dir(prompts_dir) for model_file in get_files_in_dir(models_dir) for model_info in [json.load(open(os.path.join(models_dir, model_file), 'r'))])
 
     with tqdm(total=total_iterations, desc="Testing Progress") as progress_bar:
